@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+<bean id="mailDownloader" class="org.training.MailDownloader" init-method="init">
+<property name="webCrawlerPropBn" ref="webCrawlerPropBn"></property>
+</bean>
+
+<bean id="webCrawlerPropBn" class="org.training.WebCrawlerPropertiesBn">
+<property name="pageUrl" value="http://mail-archives.apache.org/mod_mbox/maven-users/"></property>
+<property name="numberOfRetries" value="3"></property>
+<property name="resumeFileName" value="resumedownload.txt"></property>
+<property name="destination" value="D:\\Crawler\\"></property>
+<property name="serializeFileName" value="ListOfUrls.ser"></property>
+</bean>
+</beans>
