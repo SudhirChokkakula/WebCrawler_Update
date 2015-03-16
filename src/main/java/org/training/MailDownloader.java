@@ -58,14 +58,14 @@ public class MailDownloader {
 		Elements els = document.select("#grid").get(0)
 				.getElementsByAttributeValueContaining("href", "thread");
 		for (Element el : els) {
-			String key = el.absUrl("href");
-			mailUrlsMap.put(key, getMailList(key));
+			String absUrlOfMonth = el.absUrl("href");
+			mailUrlsMap.put(absUrlOfMonth, getMailList(absUrlOfMonth));
 		}
 		return mailUrlsMap;
 	}
 
-	public List<String> getMailList(String key) throws IOException {
-		Document document = connectToPageToGetUrls(key);
+	public List<String> getMailList(String absUrlOfMnth) throws IOException {
+		Document document = connectToPageToGetUrls(absUrlOfMnth);
 		List<String> listOfUrls = new ArrayList<String>();
 		int index = 0;
 		int numberOfPages = document.select("#msglist > thead > tr > th")
@@ -74,7 +74,7 @@ public class MailDownloader {
 			numberOfPages = 1;
 		}
 		for (int j = 0; j < numberOfPages; j++) {
-			document = connectToPageToGetUrls(key + "?" + j);
+			document = connectToPageToGetUrls(absUrlOfMnth + "?" + j);
 			Elements elementsofMails = document.select("#msglist > tbody").get(0).getElementsByTag("a");
 			for (Element eleofMails : elementsofMails) {
 				listOfUrls.add(index++, eleofMails.absUrl("href"));
@@ -130,7 +130,7 @@ public class MailDownloader {
 		}
 	}
 
-	public void connectToPageAndDownloadMails(String year) throws IOException {
+	public void downloadMailsForYear(String year) throws IOException {
 		Document document;
 		Elements elementsofMonths;		
 		Pair<Integer, String> indexAndUrl = null;

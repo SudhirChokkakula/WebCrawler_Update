@@ -16,6 +16,6 @@ public class WebCrawler {
 		String year = sc.next();
 		ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
 		MailDownloader mailDownloader = (MailDownloader)context.getBean("mailDownloader");
-		mailDownloader.connectToPageAndDownloadMails(year);
+		mailDownloader.downloadMailsForYear(year);
 	}
 }
