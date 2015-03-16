@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="1" time="3.18" errors="0" skipped="0" tests="5" name="org.training.MailDownloaderTest">
+<testsuite failures="0" time="3.254" errors="0" skipped="0" tests="4" name="org.training.MailDownloaderTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jre7\bin"/>
@@ -26,7 +26,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 8.1"/>
-    <property name="classworlds.conf" value="D:\WebCrawler_Updated\.metadata\.plugins\org.eclipse.m2e.core\launches\m2conf534892560074753500.tmp"/>
+    <property name="classworlds.conf" value="D:\WebCrawler_Updated\.metadata\.plugins\org.eclipse.m2e.core\launches\m2conf1295061220938223379.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Program Files\Java\jre7\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Java\jdk1.7.0_75\bin;D:\Softwares\apache-maven-3.2.5\bin;C:\Program Files (x86)\Git\cmd;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -60,45 +60,8 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase time="0.859" classname="org.training.MailDownloaderTest" name="connectToPageToGetUrlsTest"/>
-  <testcase time="0.319" classname="org.training.MailDownloaderTest" name="connectPageToDownloadMailTest"/>
-  <testcase time="0.469" classname="org.training.MailDownloaderTest" name="downloadMailTest"/>
-  <testcase time="0.016" classname="org.training.MailDownloaderTest" name="readContentFromFileTest"/>
-  <testcase time="0.015" classname="org.training.MailDownloaderTest" name="isFileExistTest">
-    <failure type="junit.framework.AssertionFailedError:">junit.framework.AssertionFailedError: null
-	at junit.framework.Assert.fail(Assert.java:47)
-	at junit.framework.Assert.assertTrue(Assert.java:20)
-	at junit.framework.Assert.assertFalse(Assert.java:34)
-	at junit.framework.Assert.assertFalse(Assert.java:41)
-	at org.training.MailDownloaderTest.isFileExistTest(MailDownloaderTest.java:77)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.lang.reflect.Method.invoke(Unknown Source)
-	at org.junit.internal.runners.TestMethod.invoke(TestMethod.java:59)
-	at org.junit.internal.runners.MethodRoadie.runTestMethod(MethodRoadie.java:98)
-	at org.junit.internal.runners.MethodRoadie$2.run(MethodRoadie.java:79)
-	at org.junit.internal.runners.MethodRoadie.runBeforesThenTestThenAfters(MethodRoadie.java:87)
-	at org.junit.internal.runners.MethodRoadie.runTest(MethodRoadie.java:77)
-	at org.junit.internal.runners.MethodRoadie.run(MethodRoadie.java:42)
-	at org.junit.internal.runners.JUnit4ClassRunner.invokeTestMethod(JUnit4ClassRunner.java:88)
-	at org.junit.internal.runners.JUnit4ClassRunner.runMethods(JUnit4ClassRunner.java:51)
-	at org.junit.internal.runners.JUnit4ClassRunner$1.run(JUnit4ClassRunner.java:44)
-	at org.junit.internal.runners.ClassRoadie.runUnprotected(ClassRoadie.java:27)
-	at org.junit.internal.runners.ClassRoadie.runProtected(ClassRoadie.java:37)
-	at org.junit.internal.runners.JUnit4ClassRunner.run(JUnit4ClassRunner.java:42)
-	at org.apache.maven.surefire.junit4.JUnit4TestSet.execute(JUnit4TestSet.java:53)
-	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:123)
-	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:104)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.lang.reflect.Method.invoke(Unknown Source)
-	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:164)
-	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:110)
-	at org.apache.maven.surefire.booter.SurefireStarter.invokeProvider(SurefireStarter.java:175)
-	at org.apache.maven.surefire.booter.SurefireStarter.runSuitesInProcessWhenForked(SurefireStarter.java:107)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:68)
-</failure>
-  </testcase>
+  <testcase time="0.971" classname="org.training.MailDownloaderTest" name="connectToPageToGetUrlsTest"/>
+  <testcase time="0.366" classname="org.training.MailDownloaderTest" name="connectPageToDownloadMailTest"/>
+  <testcase time="0" classname="org.training.MailDownloaderTest" name="readContentFromFileTest"/>
+  <testcase time="0.344" classname="org.training.MailDownloaderTest" name="downloadMailTest"/>
 </testsuite>
