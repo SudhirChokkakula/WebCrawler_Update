@@ -44,16 +44,20 @@ public class MailDownloader {
 
 	public void init() throws IOException, ClassNotFoundException {
 		mailUrlsMap = new LinkedHashMap<String, List<String>>();
-		File file = new File(webCrawlerPropBn.getDestination()+webCrawlerPropBn.getSerializeFileName());
+		File file = new File(webCrawlerPropBn.getDestination()
+				+ webCrawlerPropBn.getSerializeFileName());
 		if (file.exists()) {
 			mailUrlsMap = getListOfUrls();
 		} else {
-			mailUrlsMap = loadMonthUrlsMap(webCrawlerPropBn.getPageUrl(), mailUrlsMap);
+			mailUrlsMap = loadMonthUrlsMap(webCrawlerPropBn.getPageUrl(),
+					mailUrlsMap);
 			setListOfUrls(mailUrlsMap);
 		}
 	}
 
-	public Map<String, List<String>> loadMonthUrlsMap(String URL, Map<String, List<String>> mailUrlsMap) throws IOException {
+	public Map<String, List<String>> loadMonthUrlsMap(String URL,
+			Map<String, List<String>> mailUrlsMap) throws IOException {
+
 		Document document = connectToPageToGetUrls(URL);
 		Elements els = document.select("#grid").get(0)
 				.getElementsByAttributeValueContaining("href", "thread");
@@ -65,6 +69,7 @@ public class MailDownloader {
 	}
 
 	public List<String> getMailList(String absUrlOfMnth) throws IOException {
+		
 		Document document = connectToPageToGetUrls(absUrlOfMnth);
 		List<String> listOfUrls = new ArrayList<String>();
 		int index = 0;
@@ -75,7 +80,8 @@ public class MailDownloader {
 		}
 		for (int j = 0; j < numberOfPages; j++) {
 			document = connectToPageToGetUrls(absUrlOfMnth + "?" + j);
-			Elements elementsofMails = document.select("#msglist > tbody").get(0).getElementsByTag("a");
+			Elements elementsofMails = document.select("#msglist > tbody")
+					.get(0).getElementsByTag("a");
 			for (Element eleofMails : elementsofMails) {
 				listOfUrls.add(index++, eleofMails.absUrl("href"));
 			}
@@ -83,14 +89,16 @@ public class MailDownloader {
 		return listOfUrls;
 	}
 
-	public Map<String, List<String>> getListOfUrls() throws IOException, ClassNotFoundException {
-		Map<String, List<String>> storedList = null;
+	public Map<String, List<String>> getListOfUrls() throws IOException,
+			ClassNotFoundException {
+		Map<String, List<String>> storedMap = null;
 		FileInputStream fileIn = null;
 		ObjectInputStream in = null;
 		try {
-			fileIn = new FileInputStream(webCrawlerPropBn.getDestination()+webCrawlerPropBn.getSerializeFileName());
+			fileIn = new FileInputStream(webCrawlerPropBn.getDestination()
+					+ webCrawlerPropBn.getSerializeFileName());
 			in = new ObjectInputStream(fileIn);
-			storedList = (Map<String, List<String>>) in.readObject();
+			storedMap = (Map<String, List<String>>) in.readObject();
 		} catch (IOException ex) {
 			logger.error("Exception occured while De-Serializing the file", ex);
 			throw ex;
@@ -102,18 +110,22 @@ public class MailDownloader {
 				in.close();
 				fileIn.close();
 			} catch (IOException ex) {
-				logger.error("Exception occured while closing the resources in De-Serialization part", ex);
+				logger.error(
+						"Exception occured while closing the resources in De-Serialization part",
+						ex);
 				throw ex;
 			}
 		}
-		return storedList;
+		return storedMap;
 	}
 
-	public void setListOfUrls(Map<String, List<String>> listOfUrls) throws IOException {
+	public void setListOfUrls(Map<String, List<String>> listOfUrls)
+			throws IOException {
 		FileOutputStream fileOut = null;
 		ObjectOutputStream out = null;
 		try {
-			fileOut = new FileOutputStream("D:\\Crawler\\ListOfUrls.ser");
+			fileOut = new FileOutputStream(webCrawlerPropBn.getDestination()
+					+ webCrawlerPropBn.getSerializeFileName());
 			out = new ObjectOutputStream(fileOut);
 			out.writeObject(listOfUrls);
 		} catch (IOException ex) {
@@ -124,7 +136,9 @@ public class MailDownloader {
 				out.close();
 				fileOut.close();
 			} catch (IOException ex) {
-				logger.error("Exception occured while closing the resources in Serialization part", ex);
+				logger.error(
+						"Exception occured while closing the resources in Serialization part",
+						ex);
 				throw ex;
 			}
 		}
@@ -178,16 +192,16 @@ public class MailDownloader {
 	public Document connectToPageToGetUrls(String url) throws IOException {
 		Document document = null;
 		int tryCount = 0;
-		while(true) {
+		while (true) {
 			try {
-				logger.debug("Connectiong to :" + url);
+				logger.debug("Connecting to :" + url);
 				document = Jsoup.connect(url).get();
 				logger.debug("Connected to :" + url);
 				break;
 			} catch (IOException ex) {
 				logger.error("Exception occured while connecting to " + url, ex);
 				logger.debug("Retrying to connect to: " + url);
-				if(tryCount++ == webCrawlerPropBn.getNumberOfRetries()) {
+				if (tryCount++ == webCrawlerPropBn.getNumberOfRetries()) {
 					logger.debug("Retried to connect " + tryCount
 							+ "no.of times. But not able to connect.");
 					throw ex;
@@ -200,16 +214,16 @@ public class MailDownloader {
 	public Document connectPageToDownloadMail(String url) throws IOException {
 		Document document = null;
 		int tryCount = 0;
-		while(true) {
+		while (true) {
 			try {
-				logger.debug("Connectiong to :" + url);
+				logger.debug("Connecting to :" + url);
 				document = Jsoup.connect(url).get();
 				logger.debug("Connected to :" + url);
 				break;
 			} catch (IOException ex) {
 				logger.error("Exception occured while connecting to " + url, ex);
 				logger.debug("Retrying to connect to: " + url);
-				if(tryCount++ == webCrawlerPropBn.getNumberOfRetries()) {
+				if (tryCount++ == webCrawlerPropBn.getNumberOfRetries()) {
 					logger.debug("Retried to connect " + tryCount
 							+ "no.of times. But not able to connect.");
 					try {
@@ -232,7 +246,8 @@ public class MailDownloader {
 		return document;
 	}
 
-	public void downloadMail(String absUrlofMail, File monthDirectory) throws IOException {
+	public void downloadMail(String absUrlofMail, File monthDirectory)
+			throws IOException {
 		Element message = null;
 		Document document = connectPageToDownloadMail(absUrlofMail);
 		message = document.select("#msgview > tbody").get(0);
@@ -242,7 +257,9 @@ public class MailDownloader {
 			writer = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
 			writer.write(message.text());
 		} catch (IOException ex) {
-			logger.error("Exception occured while writing message in to the file",ex);
+			logger.error(
+					"Exception occured while writing message in to the file",
+					ex);
 			throw ex;
 		} finally {
 			try {
@@ -262,7 +279,8 @@ public class MailDownloader {
 		return false;
 	}
 
-	public Pair<Integer, String> readContentFromFile(String fileName) throws IOException {
+	public Pair<Integer, String> readContentFromFile(String fileName)
+			throws IOException {
 		file = new File(fileName);
 		BufferedReader reader = null;
 		String resumedUrl = null;
@@ -274,13 +292,17 @@ public class MailDownloader {
 				resumedUrl = reader.readLine();
 				indexAndUrl = Pair.with(index, resumedUrl);
 			} catch (IOException ex) {
-				logger.error("Exception occured while reading the content from file", ex);
+				logger.error(
+						"Exception occured while reading the content from file "
+								+ fileName, ex);
 				throw ex;
 			} finally {
 				try {
 					reader.close();
 				} catch (IOException ex) {
-					logger.error("Exception occured while closing the resource reader", ex);
+					logger.error(
+							"Exception occured while closing the resource reader",
+							ex);
 					throw ex;
 				}
 			}
