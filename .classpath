@@ -15,5 +15,4 @@
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/4.0.0.RELEASE/spring-core-4.0.0.RELEASE.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-expression/4.0.0.RELEASE/spring-expression-4.0.0.RELEASE.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/javatuples/javatuples/1.1/javatuples-1.1.jar"/>
 </classpath>

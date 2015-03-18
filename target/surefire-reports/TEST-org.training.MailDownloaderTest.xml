@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="3.254" errors="0" skipped="0" tests="4" name="org.training.MailDownloaderTest">
+<testsuite failures="0" time="3.53" errors="0" skipped="0" tests="4" name="org.training.MailDownloaderTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jre7\bin"/>
@@ -26,7 +26,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 8.1"/>
-    <property name="classworlds.conf" value="D:\WebCrawler_Updated\.metadata\.plugins\org.eclipse.m2e.core\launches\m2conf1295061220938223379.tmp"/>
+    <property name="classworlds.conf" value="D:\WebCrawler_Updated\.metadata\.plugins\org.eclipse.m2e.core\launches\m2conf2740281320130122693.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Program Files\Java\jre7\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Java\jdk1.7.0_75\bin;D:\Softwares\apache-maven-3.2.5\bin;C:\Program Files (x86)\Git\cmd;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -60,8 +60,8 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase time="0.971" classname="org.training.MailDownloaderTest" name="connectToPageToGetUrlsTest"/>
-  <testcase time="0.366" classname="org.training.MailDownloaderTest" name="connectPageToDownloadMailTest"/>
-  <testcase time="0" classname="org.training.MailDownloaderTest" name="readContentFromFileTest"/>
-  <testcase time="0.344" classname="org.training.MailDownloaderTest" name="downloadMailTest"/>
+  <testcase time="1.342" classname="org.training.MailDownloaderTest" name="getMailListTest"/>
+  <testcase time="0.204" classname="org.training.MailDownloaderTest" name="connectToPageToGetUrlsTest"/>
+  <testcase time="0.875" classname="org.training.MailDownloaderTest" name="getListOfUrlsTest"/>
+  <testcase time="0.208" classname="org.training.MailDownloaderTest" name="downloadMailsForYearTest"/>
 </testsuite>

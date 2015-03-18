@@ -1,11 +1,11 @@
 package org.training;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.javatuples.Pair;
 import org.jsoup.nodes.Document;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,6 +26,22 @@ public class MailDownloaderTest {
 	}
 	
 	@Test
+	public void getMailListTest() throws IOException {
+		List<String> mailList = mailDownloader.getMailList("http://mail-archives.apache.org/mod_mbox/maven-users/201412.mbox/thread");
+		if(!mailList.isEmpty()) {
+			Assert.assertEquals(220, mailList.size());
+		}
+	}
+	
+	@Test
+	public void getListOfUrlsTest() throws ClassNotFoundException, IOException {
+		Map<String,List<String>> urlsMap = mailDownloader.getListOfUrls();
+		if(!urlsMap.isEmpty()) {
+			Assert.assertTrue(true);
+		}
+	}
+	
+	@Test
 	public void downloadMailsForYearTest() {
 		try {
 		mailDownloader.downloadMailsForYear("2015");
@@ -40,52 +56,7 @@ public class MailDownloaderTest {
 		Document document = mailDownloader.connectToPageToGetUrls(webCrawlerPropBn.getPageUrl());
 		if(document != null) {
 			Assert.assertTrue(true);
-		} else {
-			Assert.assertFalse(true);
 		}
 	}
 	
-	@Test
-	public void connectPageToDownloadMailTest() throws IOException {
-		String mailUrl = "http://mail-archives.apache.org/mod_mbox/maven-users/201501.mbox/%3cCAAZU44=hcLViyKRupH0nSg5styj650rjWFoqmkVmVA6b9FYeuA@mail.gmail.com%3e";
-		Document document = mailDownloader.connectPageToDownloadMail(mailUrl);
-		if(document != null) {
-			Assert.assertTrue(true);
-		} else {
-			Assert.assertFalse(true);
-		}
-	}
-	
-	@Test
-	public void downloadMailTest() {
-		String mailUrl = "http://mail-archives.apache.org/mod_mbox/maven-users/201501.mbox/%3cCAAZU44=hcLViyKRupH0nSg5styj650rjWFoqmkVmVA6b9FYeuA@mail.gmail.com%3e";
-		File file = new File("D:\\Work\\");
-		try {
-		mailDownloader.downloadMail(mailUrl, file);
-		Assert.assertTrue(true);
-		} catch (Exception ex) {
-			Assert.assertFalse(true);
-		}
-	}
-	
-	@Test
-	public void isFileExistTest() {
-		boolean isFileExist = mailDownloader.isFileExist(webCrawlerPropBn.getResumeFileName());
-		if(isFileExist) {
-			Assert.assertTrue(true);
-		} else {
-			Assert.assertFalse(true);
-		}
-	}
-	
-	@Test
-	public void readContentFromFileTest() throws IOException {
-		Pair<Integer,String> indexAndUrl = mailDownloader.readContentFromFile(webCrawlerPropBn.getResumeFileName());
-		if(indexAndUrl != null) {
-			Assert.assertTrue(true);
-		} else {
-			Assert.assertFalse(true);
-		}
-	}
-
 }
