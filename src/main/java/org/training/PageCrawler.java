@@ -12,53 +12,62 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class MailDownloader {
+public class PageCrawler {
 
-	private final static Logger logger = Logger.getLogger(MailDownloader.class);
-	private WebCrawlerPropertiesBn webCrawlerPropBn;
+	private final static Logger logger = Logger.getLogger(PageCrawler.class);
+	private CrawlerPropertiesBn crawlerPropBn;
 	private Map<String, List<String>> mailUrlsMap;
-
-	public WebCrawlerPropertiesBn getWebCrawlerPropBn() {
-		return webCrawlerPropBn;
+	
+	@Autowired
+	private ConnectPageToCrawl connectPageToCrawl;
+	
+	public ConnectPageToCrawl getConnectPageToCrawl() {
+		return connectPageToCrawl;
 	}
 
-	public void setWebCrawlerPropBn(WebCrawlerPropertiesBn webCrawlerPropBn) {
-		this.webCrawlerPropBn = webCrawlerPropBn;
+	public void setConnectPageToCrawl(ConnectPageToCrawl connectPageToCrawl) {
+		this.connectPageToCrawl = connectPageToCrawl;
+	}
+
+	public CrawlerPropertiesBn getCrawlerPropBn() {
+		return crawlerPropBn;
+	}
+
+	public void setCrawlerPropBn(CrawlerPropertiesBn crawlerPropBn) {
+		this.crawlerPropBn = crawlerPropBn;
 	}
 
 	public void init() throws IOException, ClassNotFoundException {
 		mailUrlsMap = new LinkedHashMap<String, List<String>>();
-		File file = new File(webCrawlerPropBn.getSerializeFileName());
-		if (file.exists()) {
-			mailUrlsMap = getListOfUrls();
-		} else {
-			mailUrlsMap = loadMonthUrlsMap(webCrawlerPropBn.getPageUrl(),
+		File file = new File(crawlerPropBn.getSerializeFileName());
+		if (!file.exists()) {
+			mailUrlsMap = loadMonthUrlsMap(crawlerPropBn.getPageUrl(),
 					mailUrlsMap);
-			setListOfUrls(mailUrlsMap);
+			serializeTheMap(mailUrlsMap);
 		}
 	}
 
 	public Map<String, List<String>> loadMonthUrlsMap(String URL,
 			Map<String, List<String>> mailUrlsMap) throws IOException {
 
-		Document document = connectToPageToGetUrls(URL);
+		Document document = connectPageToCrawl.connectToPage(URL);
 		Elements els = document.select("#grid").get(0)
 				.getElementsByAttributeValueContaining("href", "thread");
 		for (Element el : els) {
 			String absUrlOfMonth = el.absUrl("href");
-			mailUrlsMap.put(absUrlOfMonth, getMailList(absUrlOfMonth));
+			mailUrlsMap.put(absUrlOfMonth, getMailUrlsList(absUrlOfMonth));
 		}
 		return mailUrlsMap;
 	}
 
-	public List<String> getMailList(String absUrlOfMnth) throws IOException {
+	public List<String> getMailUrlsList(String absUrlOfMnth) throws IOException {
 		
-		Document document = connectToPageToGetUrls(absUrlOfMnth);
+		Document document = connectPageToCrawl.connectToPage(absUrlOfMnth);
 		List<String> listOfUrls = new ArrayList<String>();
 		int index = 0;
 		int numberOfPages = document.select("#msglist > thead > tr > th")
@@ -67,7 +76,7 @@ public class MailDownloader {
 			numberOfPages = 1;
 		}
 		for (int j = 0; j < numberOfPages; j++) {
-			document = connectToPageToGetUrls(absUrlOfMnth + "?" + j);
+			document = connectPageToCrawl.connectToPage(absUrlOfMnth + "?" + j);
 			Elements elementsofMails = document.select("#msglist > tbody")
 					.get(0).getElementsByTag("a");
 			for (Element eleofMails : elementsofMails) {
@@ -77,13 +86,13 @@ public class MailDownloader {
 		return listOfUrls;
 	}
 
-	public Map<String, List<String>> getListOfUrls() throws IOException,
+	public Map<String, List<String>> deSerializeTheMap() throws IOException,
 			ClassNotFoundException {
 		Map<String, List<String>> storedMap = null;
 		FileInputStream fileIn = null;
 		ObjectInputStream in = null;
 		try {
-			fileIn = new FileInputStream(webCrawlerPropBn.getSerializeFileName());
+			fileIn = new FileInputStream(crawlerPropBn.getSerializeFileName());
 			in = new ObjectInputStream(fileIn);
 			storedMap = (Map<String, List<String>>) in.readObject();
 		} catch (IOException ex) {
@@ -106,12 +115,12 @@ public class MailDownloader {
 		return storedMap;
 	}
 
-	public void setListOfUrls(Map<String, List<String>> listOfUrls)
+	public void serializeTheMap(Map<String, List<String>> listOfUrls)
 			throws IOException {
 		FileOutputStream fileOut = null;
 		ObjectOutputStream out = null;
 		try {
-			fileOut = new FileOutputStream(webCrawlerPropBn.getSerializeFileName());
+			fileOut = new FileOutputStream(crawlerPropBn.getSerializeFileName());
 			out = new ObjectOutputStream(fileOut);
 			out.writeObject(listOfUrls);
 		} catch (IOException ex) {
@@ -130,52 +139,12 @@ public class MailDownloader {
 		}
 	}
 
-	public void downloadMailsForYear(String year) throws IOException {
+	public Elements getMonthUrlsForYear(String year) throws IOException {
 		Document document;
 		Elements elementsofMonths;
-		String absUrlofMonth;
-
-		document = connectToPageToGetUrls(webCrawlerPropBn.getPageUrl());
+		document = connectPageToCrawl.connectToPage(crawlerPropBn.getPageUrl());
 		elementsofMonths = document.getElementsByAttributeValueContaining(
 				"href", year);
-		new File(webCrawlerPropBn.getDestination() + year).mkdirs();
-		int monthcounter = (elementsofMonths.size() / 3) + 1;
-		
-		for (Element eleofMonths : elementsofMonths) {
-			absUrlofMonth = eleofMonths.absUrl("href");
-			if (absUrlofMonth.contains(year)
-					&& absUrlofMonth.contains("thread")) {
-				monthcounter--;
-				File monthDirectory = new File(
-						webCrawlerPropBn.getDestination() + year + "\\"
-								+ (monthcounter));
-				Downloader downlader = new Downloader(absUrlofMonth,
-						mailUrlsMap, monthDirectory, webCrawlerPropBn);
-				Thread t = new Thread(downlader);
-				t.start();
-			}
-		}
-	}
-
-	public Document connectToPageToGetUrls(String url) throws IOException {
-		Document document = null;
-		int tryCount = 0;
-		while (true) {
-			try {
-				logger.debug("Connecting to :" + url);
-				document = Jsoup.connect(url).get();
-				logger.debug("Connected to :" + url);
-				break;
-			} catch (IOException ex) {
-				logger.error("Exception occured while connecting to " + url, ex);
-				logger.debug("Retrying to connect to: " + url);
-				if (tryCount++ == webCrawlerPropBn.getNumberOfRetries()) {
-					logger.debug("Retried to connect " + tryCount
-							+ "no.of times. But not able to connect.");
-					throw ex;
-				}
-			}
-		}
-		return document;
+		return elementsofMonths;
 	}
 }

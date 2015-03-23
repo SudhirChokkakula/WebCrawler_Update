@@ -67,7 +67,7 @@
       <manifest>
         <addClasspath>true</addClasspath>
         <classpathPrefix>lib/</classpathPrefix>
-        <mainClass>org.training.WebCrawler</mainClass>
+        <mainClass>org.training.MainApp</mainClass>
       </manifest>
     </archive>
   </configuration>

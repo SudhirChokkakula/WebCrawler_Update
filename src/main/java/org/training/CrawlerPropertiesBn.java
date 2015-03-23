@@ -2,7 +2,7 @@ package org.training;
 
 import java.io.Serializable;
 
-public class WebCrawlerPropertiesBn implements Serializable {
+public class CrawlerPropertiesBn implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private String pageUrl;

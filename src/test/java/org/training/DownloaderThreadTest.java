@@ -3,7 +3,6 @@ package org.training;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -13,21 +12,23 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class DownloaderTest {
+public class DownloaderThreadTest {
 	
 	private static ApplicationContext context = null;
-	private static MailDownloader mailDownloader = null;
-	private static WebCrawlerPropertiesBn webCrawlerPropBn;
-	private static Downloader downloader;
+	private static CrawlerPropertiesBn crawlerPropBn;
+	private static DownloaderThread downloader;
+	private static ConnectPageToCrawl connectPageToCrawl;
 	
 	@BeforeClass
 	public static void setup() throws ClassNotFoundException, IOException {
 		context = new ClassPathXmlApplicationContext("spring.xml");
-		mailDownloader = (MailDownloader)context.getBean("mailDownloader");
-		webCrawlerPropBn = mailDownloader.getWebCrawlerPropBn();
-		Map<String,List<String>> mailUrlsMap = mailDownloader.getListOfUrls();
+		downloader = (DownloaderThread) context.getBean("downloaderThread");
+		connectPageToCrawl = (ConnectPageToCrawl) context.getBean("connectPageToCrawl");
+		crawlerPropBn = (CrawlerPropertiesBn) context.getBean("crawlerPropBn");
 		File file = new File("D:\\Work\\");
-		downloader = new Downloader("", mailUrlsMap, file, webCrawlerPropBn);
+		downloader.setMonthDirectory(file);
+		downloader.setCrawlerPropBn(crawlerPropBn);
+		downloader.setConnectPageToCrawl(connectPageToCrawl);
 	}
 	
 	@Test
@@ -53,7 +54,7 @@ public class DownloaderTest {
 	
 	@Test
 	public void isFileExistTest() {
-		boolean isFileExist = downloader.isFileExist(webCrawlerPropBn.getResumeFileName());
+		boolean isFileExist = downloader.isFileExist(crawlerPropBn.getResumeFileName());
 		if(isFileExist) {
 			Assert.assertTrue(true);
 		} 
@@ -61,9 +62,9 @@ public class DownloaderTest {
 	
 	@Test
 	public void readContentFromFileTest() throws IOException {
-		boolean isFileExist = downloader.isFileExist(webCrawlerPropBn.getResumeFileName());
+		boolean isFileExist = downloader.isFileExist(crawlerPropBn.getResumeFileName());
 		if(isFileExist) {
-		List<String> indexAndUrl = downloader.readContentFromFile(webCrawlerPropBn.getResumeFileName());
+		List<String> indexAndUrl = downloader.readContentFromFile(crawlerPropBn.getResumeFileName());
 		if(!indexAndUrl.isEmpty()) {
 			Assert.assertTrue(true);
 		}
@@ -72,9 +73,9 @@ public class DownloaderTest {
 	
 	@Test
 	public void deleteFileTest() {
-		boolean isFileExist = downloader.isFileExist(webCrawlerPropBn.getResumeFileName());
+		boolean isFileExist = downloader.isFileExist(crawlerPropBn.getResumeFileName());
 		if(isFileExist) {
-		downloader.deleteFile(webCrawlerPropBn.getResumeFileName());
+		downloader.deleteFile(crawlerPropBn.getResumeFileName());
 		Assert.assertTrue(true);
 		}
 	}

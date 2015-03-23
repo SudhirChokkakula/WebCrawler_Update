@@ -13,30 +13,67 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-public class Downloader implements Runnable {
+@Component
+@Scope("prototype")
+public class DownloaderThread implements Runnable {
 	
 	private String absUrlOfMnth = null;
 	private Map<String, List<String>> mailUrlsMap = null;
-	private WebCrawlerPropertiesBn webCrawlerPropBn;
+	private CrawlerPropertiesBn crawlerPropBn;
 	private File file;
-	private final static Logger logger = Logger.getLogger(Downloader.class);
+	private final static Logger logger = Logger.getLogger(DownloaderThread.class);
 	private int fileCount;
 	private int count;
 	private File monthDirectory;
 	private Writer writer;
 	
-	public Downloader(String absUrlOfMnth,
-			Map<String, List<String>> mailUrlsMap, 
-			File monthDirectory,
-			WebCrawlerPropertiesBn webCrawlerPropBn) {
+	@Autowired
+	ConnectPageToCrawl connectPageToCrawl;
+	
+	public ConnectPageToCrawl getConnectPageToCrawl() {
+		return connectPageToCrawl;
+	}
+
+	public void setConnectPageToCrawl(ConnectPageToCrawl connectPageToCrawl) {
+		this.connectPageToCrawl = connectPageToCrawl;
+	}
+	
+	public String getAbsUrlOfMnth() {
+		return absUrlOfMnth;
+	}
+
+	public void setAbsUrlOfMnth(String absUrlOfMnth) {
 		this.absUrlOfMnth = absUrlOfMnth;
+	}
+
+	public Map<String, List<String>> getMailUrlsMap() {
+		return mailUrlsMap;
+	}
+
+	public void setMailUrlsMap(Map<String, List<String>> mailUrlsMap) {
 		this.mailUrlsMap = mailUrlsMap;
+	}
+
+	public CrawlerPropertiesBn getCrawlerPropBn() {
+		return crawlerPropBn;
+	}
+
+	public void setCrawlerPropBn(CrawlerPropertiesBn crawlerPropBn) {
+		this.crawlerPropBn = crawlerPropBn;
+	}
+
+	public File getMonthDirectory() {
+		return monthDirectory;
+	}
+
+	public void setMonthDirectory(File monthDirectory) {
 		this.monthDirectory = monthDirectory;
-		this.webCrawlerPropBn = webCrawlerPropBn;
 	}
 
 	@Override
@@ -53,8 +90,8 @@ public class Downloader implements Runnable {
 		String resumeURL = null;
 		List<String> listOfUrls;
 		List<String> listOfResumeUrls;
-			if (isFileExist(webCrawlerPropBn.getResumeFileName())) {
-				listOfResumeUrls = readContentFromFile(webCrawlerPropBn.getResumeFileName());
+			if (isFileExist(crawlerPropBn.getResumeFileName())) {
+				listOfResumeUrls = readContentFromFile(crawlerPropBn.getResumeFileName());
 				for(String resumeUrlWithIndex : listOfResumeUrls) {
 					String urlAndIndex[] = resumeUrlWithIndex.split(",");
 					index = Integer.parseInt(urlAndIndex[0]);
@@ -71,8 +108,8 @@ public class Downloader implements Runnable {
 			for (count = fileCount; count < listOfUrls.size(); count++) {
 				downloadMail(listOfUrls.get(count), monthDirectory);
 			}
-			if(isFileExist(webCrawlerPropBn.getResumeFileName())) {
-				deleteFile(webCrawlerPropBn.getResumeFileName());
+			if(isFileExist(crawlerPropBn.getResumeFileName())) {
+				deleteFile(crawlerPropBn.getResumeFileName());
 			}
 	}
 	
@@ -129,21 +166,11 @@ public class Downloader implements Runnable {
 	
 	public Document connectPageToDownloadMail(String url) throws IOException {
 		Document document = null;
-		int tryCount = 0;
-		while (true) {
 			try {
-				logger.debug("Connecting to :" + url);
-				document = Jsoup.connect(url).get();
-				logger.debug("Connected to :" + url);
-				break;
+				document = connectPageToCrawl.connectToPage(url);
 			} catch (IOException ex) {
-				logger.error("Exception occured while connecting to " + url, ex);
-				logger.debug("Retrying to connect to: " + url);
-				if (tryCount++ == webCrawlerPropBn.getNumberOfRetries()) {
-					logger.debug("Retried to connect " + tryCount
-							+ "no.of times. But not able to connect.");
 					try {
-						file = new File(webCrawlerPropBn.getResumeFileName());
+						file = new File(crawlerPropBn.getResumeFileName());
 						writer = new BufferedWriter(new FileWriter(file,true));
 						writer.write(Integer.toString(count));
 						writer.write(",");
@@ -157,9 +184,7 @@ public class Downloader implements Runnable {
 						writer.close();
 					}
 					throw ex;
-				}
 			}
-		}
 		return document;
 	}
 }
