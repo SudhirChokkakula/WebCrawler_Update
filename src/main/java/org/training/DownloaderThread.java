@@ -85,7 +85,7 @@ public class DownloaderThread implements Runnable {
 		}
 	}
 	
-	public void downloadMails() throws IOException{
+	public void downloadMails() throws IOException {
 		int index = 0;
 		String resumeURL = null;
 		List<String> listOfUrls;

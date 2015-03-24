@@ -31,5 +31,14 @@ public class ConnectPageToCrawlTest {
 			Assert.assertTrue(true);
 		}
 	}
+	
+	@Test
+	public void connectToBlankPageTest() throws IOException {
+		try {
+		connectPageToCrawl.connectToPage("");
+		} catch(Exception ex) {
+			Assert.assertTrue(true);
+		}
+	}
 
 }
