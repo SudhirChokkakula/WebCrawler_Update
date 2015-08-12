@@ -76,7 +76,6 @@ public class DownloaderThread implements Runnable {
 		this.monthDirectory = monthDirectory;
 	}
 
-	@Override
 	public void run() {
 		try {
 			downloadMails();
